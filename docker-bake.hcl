@@ -1,8 +1,9 @@
-// Alpine version
+// Alpine image tag
 variable "ALPINE_VERSION" {
   default = "latest"
 }
 
+// Golang image tag
 variable "GOLANG_VERSION" {
   default = "latest"
 }
