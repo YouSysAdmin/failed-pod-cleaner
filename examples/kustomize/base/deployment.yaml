@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  template:
+    spec:
+      serviceAccountName: service-account
+      containers:
+        - name: cleaner
+          image: cleaner-image
+          imagePullPolicy: IfNotPresent
+          env:
+            # set a timeout between runs of the cleaning process
+            - name: TIMEOUT
+              value: "60"
+          resources:
+            requests:
+              memory: "100M"
+              cpu: "0.1"
+            limits:
+              memory: "100M"
+              cpu: "0.2"

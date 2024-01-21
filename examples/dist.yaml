@@ -1,0 +1,72 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app: failed-pod-cleaner
+  name: failed-pod-cleaner-service-account
+  namespace: default
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app: failed-pod-cleaner
+  name: failed-pod-cleaner-cluster-role
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - get
+  - delete
+  - list
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app: failed-pod-cleaner
+  name: failed-pod-cleaner-cluster-role-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: failed-pod-cleaner-cluster-role
+subjects:
+- kind: ServiceAccount
+  name: failed-pod-cleaner
+  namespace: default
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: failed-pod-cleaner
+  name: failed-pod-cleaner-deployment
+  namespace: default
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: failed-pod-cleaner
+  template:
+    metadata:
+      labels:
+        app: failed-pod-cleaner
+    spec:
+      containers:
+      - env:
+        - name: TIMEOUT
+          value: "60"
+        image: ghcr.io/yousysadmin/failed-pod-cleaner:latest
+        imagePullPolicy: IfNotPresent
+        name: cleaner
+        resources:
+          limits:
+            cpu: "0.2"
+            memory: 100M
+          requests:
+            cpu: "0.1"
+            memory: 100M
+      serviceAccountName: failed-pod-cleaner-service-account
