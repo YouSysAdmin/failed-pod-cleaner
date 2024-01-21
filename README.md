@@ -19,9 +19,20 @@ docker pull yousysadmin/failed-pod-cleaner:latest
 
 ## Usage
 
+### Local
 ```shell
 docker run --rm -v $HOME/.kube/config:/root/.kube/config yousysadmin/failed-pod-cleaner:latest
 ```
+
+### Cluster
+```shell
+# Simple install in the `default` namespace
+kubectl apply -f https://github.com/YouSysAdmin/failed-pod-cleaner/examples/dist.yaml
+# Or
+git clone https://github.com/YouSysAdmin/failed-pod-cleaner.git
+kubectl apply -k failed-pod-cleaner/examples/kustomize
+```
+
 
 ## Output
 ```json
