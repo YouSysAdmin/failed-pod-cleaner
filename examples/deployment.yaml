@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: failed-pod-cleaner
+  namespace: default
+  labels:
+    app: failed-pod-cleaner
+spec:
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: failed-pod-cleaner
+  template:
+    metadata:
+      labels:
+        app: failed-pod-cleaner
+    spec:
+      serviceAccountName: failed-pod-cleaner
+      containers:
+        - name: failed-pod-cleaner
+          image: ghcr.io/yousysadmin/failed-pod-cleaner:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            # set a timeout between runs of the cleaning process
+            - name: TIMEOUT
+              value: "60"
+          resources:
+            requests:
+              memory: "100M"
+              cpu: "0.1"
+            limits:
+              memory: "100M"
+              cpu: "0.2"
