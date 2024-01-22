@@ -34,7 +34,7 @@ roleRef:
   name: failed-pod-cleaner-cluster-role
 subjects:
 - kind: ServiceAccount
-  name: failed-pod-cleaner
+  name: failed-pod-cleaner-service-account
   namespace: default
 ---
 apiVersion: apps/v1

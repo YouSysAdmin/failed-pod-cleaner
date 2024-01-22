@@ -8,7 +8,7 @@ namespace: default
 resources:
 - ./base
 
-# Path ServiceAccount namespace for ClusterRoleBinding
+# Path ServiceAccount name/namespace for the ClusterRoleBinding
 replacements:
   - source:
       kind: ServiceAccount
@@ -20,3 +20,13 @@ replacements:
           name: cluster-role-binding
         fieldPaths:
           - subjects.0.namespace
+  - source:
+      kind: ServiceAccount
+      name: service-account
+      fieldPath: metadata.name
+    targets:
+      - select:
+          kind: ClusterRoleBinding
+          name: cluster-role-binding
+        fieldPaths:
+          - subjects.0.name
